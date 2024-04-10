@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+src/project_creator/__init__.py
+src/project_creator/build.py
+src/project_creator.egg-info/PKG-INFO
+src/project_creator.egg-info/SOURCES.txt
+src/project_creator.egg-info/dependency_links.txt
+src/project_creator.egg-info/not-zip-safe
+src/project_creator.egg-info/top_level.txt
