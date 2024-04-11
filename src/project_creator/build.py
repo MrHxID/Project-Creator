@@ -2,6 +2,9 @@
 
 import os
 import re
+
+# TODO run "python -m venv .venv" and "pip install -e ." in new project
+import subprocess
 import sys
 from datetime import date
 from functools import partial
@@ -184,7 +187,7 @@ def main():
     proj_dir = parent_dir / proj_folder
 
     try:
-        proj_dir.mkdir()
+        proj_dir.mkdir(parents=True)
     except FileExistsError:
         replace_existing = input(
             "The selected project already exists. Continuing may override important\n"
@@ -203,7 +206,7 @@ def main():
     # Start creating the files
 
     code_dir = proj_dir / "src" / proj_name
-    code_dir.mkdir(exist_ok=True)
+    code_dir.mkdir(parents=True, exist_ok=True)
     tests_dir = proj_dir / "tests"
     tests_dir.mkdir(exist_ok=True)
 
