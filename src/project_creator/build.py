@@ -16,6 +16,66 @@ _help_dict = {
     'For a more detailed example refer to the section "[Naming Convention]" in "README.md"',
 }
 
+files = {
+    "LICENSE": """License MIT
+
+Copyright (c) {year} {author}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in the
+Software without restriction, including without limitation the rights to use, copy,
+modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies
+or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+OR OTHER DEALINGS IN THE SOFTWARE.""",
+    "pyproject.toml": """[build-system]
+requires = ["setuptools>=42.0", "wheel"]
+build-backend = "setuptools.build_meta"
+""",
+    "README.md": "",
+    "setup.cfg": """[metadata]
+name = {proj_name}
+description = 
+author = {author}
+license = MIT
+license_file = LICENSE
+version = 1.0.0
+platforms = win32
+classifiers = 
+    Programming Language :: Python :: {python_ver}
+
+[options]
+packages = 
+    {proj_name}
+install_requires =
+
+python_requires = >={python_ver}
+package_dir = 
+    =src
+zip_safe = no""",
+    "setup.py": """from setuptools import setup
+
+if __name__ == "__main__":
+    setup()
+""",
+    "main.py": """def main(): ...
+
+
+if __name__ == "__main__":
+    main()
+""",
+    "__init__.py": "",
+}
+
 
 def get_help(topic: str) -> None:
     """Returns a description for the given topic."""
@@ -23,6 +83,11 @@ def get_help(topic: str) -> None:
     print("\n" + help_topic)
     print("=" * len(help_topic) + "\n")
     print(_help_dict[topic], "\n")
+
+
+def create_file(directory: Path, file_name: str, format_args: dict[str, str]):
+    """Create the file and fill it with basic content."""
+    ...
 
 
 def main():
@@ -92,10 +157,11 @@ def main():
 
             case "n" | "no" | _:
                 exit(1)
-        
+
         del replace_existing
-    
-    
+
+    dir_src = proj_dir / "src"
+    dir_tests = proj_dir / "tests"
 
 
 if __name__ == "__main__":
