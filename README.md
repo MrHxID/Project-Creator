@@ -13,6 +13,7 @@ This will be the basic file structure:
 |   +-- [proj name]
 |       |
 |       +-- __init__.py
+|       +-- main.py
 |       +-- [your code]
 |       +-- ...
 |
@@ -65,6 +66,7 @@ Test Project
 |   +-- test_project
 |       |
 |       +-- __init__.py
+|       +-- main.py
 |       +-- ...
 |
 +-- tests
