@@ -2,6 +2,7 @@
 
 import os
 import re
+from datetime import date
 from pathlib import Path
 
 _help_dict = {
@@ -14,12 +15,14 @@ _help_dict = {
     "a new folder is created here using the naming convention for [home dir] and every file is put\n"
     "into there.\n"
     'For a more detailed example refer to the section "[Naming Convention]" in "README.md"',
+    "author": "Your real name or an alias to identify you with. This will only be used for the\n"
+    'license and the "setup.cfg" files.',
 }
 
 files = {
     "LICENSE": """License MIT
 
-Copyright (c) {year} {author}
+Copyright (c) {year} "{author}"
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in the
@@ -85,9 +88,11 @@ def get_help(topic: str) -> None:
     print(_help_dict[topic], "\n")
 
 
-def create_file(directory: Path, file_name: str, format_args: dict[str, str]):
+def create_file(file_name: str, directory: Path, format_args: dict[str, str]):
     """Create the file and fill it with basic content."""
-    ...
+
+    with open(directory / file_name, "w+") as file:
+        file.write(files[file_name].format(**format_args))
 
 
 def main():
@@ -119,7 +124,7 @@ def main():
 
     while True:
         # continuously ask for directory until a valid one is provided
-        parent_dir = Path(input("Enter your projects home directory: "))
+        parent_dir = Path(input("Enter your projects parent directory: "))
         str_parent_dir = str(parent_dir)
 
         match str_parent_dir.lower():
@@ -138,6 +143,26 @@ def main():
                 parent_dir = Path(re.sub(pattern, "_", str_parent_dir))
                 break
 
+    while True:
+        author = input("Enter your name or alias: ")
+
+        match author:
+            case "?help":
+                get_help("author")
+                continue
+
+            case "?quit":
+                exit(0)
+
+            case "":
+                author = os.getlogin()
+                break
+
+            case _:
+                break
+
+    print(f"{author = }")
+
     proj_folder = " ".join(word.capitalize() for word in proj_name.split("_"))
     print(proj_folder)
 
@@ -146,6 +171,7 @@ def main():
     try:
         proj_dir.mkdir()
     except FileExistsError:
+        print(proj_dir)
         replace_existing = input(
             "The selected project already exists. Continuing may override important\n"
             "data. Do you want to continue anyway? (y/n): "
@@ -160,8 +186,15 @@ def main():
 
         del replace_existing
 
-    dir_src = proj_dir / "src"
-    dir_tests = proj_dir / "tests"
+    # Start creating the files
+
+    src_dir = proj_dir / "src"
+    src_dir.mkdir(exist_ok=True)
+    tests_dir = proj_dir / "tests"
+    tests_dir.mkdir(exist_ok=True)
+
+    create_file("LICENSE", proj_dir, {"year": date.today().year, "author": author})
+    create_file("pyproject.toml")
 
 
 if __name__ == "__main__":
