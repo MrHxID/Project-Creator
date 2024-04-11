@@ -2,7 +2,9 @@
 
 import os
 import re
+import sys
 from datetime import date
+from functools import partial
 from pathlib import Path
 
 _help_dict = {
@@ -88,11 +90,27 @@ def get_help(topic: str) -> None:
     print(_help_dict[topic], "\n")
 
 
-def create_file(file_name: str, directory: Path, format_args: dict[str, str]):
-    """Create the file and fill it with basic content."""
+def create_file(
+    file_name: str, directory: Path, format_args: dict[str, str] | None = None
+):
+    """Create the file and fill it with basic content.
+
+    Args:
+    - file_name (str): name of the file including extention (e.g. ".py")
+    - directory (Path): Path-like object describing the location to put the file
+    - format_args (dict | None): format the file contents before writing, if `None`
+        use empty dict
+
+    Returns
+    - None
+    """
+
+    default = {}
+    if format_args is not None:
+        default.update(format_args)
 
     with open(directory / file_name, "w+") as file:
-        file.write(files[file_name].format(**format_args))
+        file.write(files[file_name].format(**default))
 
 
 def main():
@@ -161,17 +179,13 @@ def main():
             case _:
                 break
 
-    print(f"{author = }")
-
     proj_folder = " ".join(word.capitalize() for word in proj_name.split("_"))
-    print(proj_folder)
 
     proj_dir = parent_dir / proj_folder
 
     try:
         proj_dir.mkdir()
     except FileExistsError:
-        print(proj_dir)
         replace_existing = input(
             "The selected project already exists. Continuing may override important\n"
             "data. Do you want to continue anyway? (y/n): "
@@ -188,13 +202,30 @@ def main():
 
     # Start creating the files
 
-    src_dir = proj_dir / "src"
-    src_dir.mkdir(exist_ok=True)
+    code_dir = proj_dir / "src" / proj_name
+    code_dir.mkdir(exist_ok=True)
     tests_dir = proj_dir / "tests"
     tests_dir.mkdir(exist_ok=True)
 
-    create_file("LICENSE", proj_dir, {"year": date.today().year, "author": author})
-    create_file("pyproject.toml")
+    format_dict = {
+        "proj_name": proj_name,
+        "author": author,
+        "year": date.today().year,
+        "python_ver": "{}.{}".format(*sys.version_info[:2]),
+    }
+
+    create_formatted_file = partial(create_file, format_args=format_dict)
+
+    create_formatted_file("LICENSE", proj_dir)
+    create_formatted_file("pyproject.toml", proj_dir)
+    create_formatted_file("README.md", proj_dir)
+    create_formatted_file("setup.cfg", proj_dir)
+    create_formatted_file("setup.py", proj_dir)
+
+    create_formatted_file("__init__.py", code_dir)
+    create_formatted_file("main.py", code_dir)
+
+    create_formatted_file("__init__.py", tests_dir)
 
 
 if __name__ == "__main__":
