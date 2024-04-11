@@ -9,14 +9,16 @@ _help_dict = {
     'Only alphanumeric characters and "_" are permitted. All other characters are escaped with "_".\n\n'
     'Example: Look at the structure of "Project Creator". There is a folder called "src" and inside\n'
     'is a folder called "project_creator". This is what the name refers to.',
+    # TODO implement help for directory
     "directory": "",
 }
 
 
 def get_help(topic: str) -> None:
     """Returns a description for the given topic."""
-    print(f"\nHELP ({topic.upper()}):")
-    print("=" * len(f"HELP ({topic.upper()}):"), "\n")
+    help_topic = f"HELP ({topic.upper()}):"
+    print("\n" + help_topic)
+    print("=" * len(help_topic) + "\n")
     print(_help_dict[topic], "\n")
 
 
@@ -30,13 +32,11 @@ def main():
         'To quit without creating a project, type "?quit".'
     )
 
-    print(rf"[^\w_. -{os.sep}]")
-
     while True:
         # continuously ask for name until a valid name is provided
-        proj_name = input("Enter your projects name: ")
+        proj_name = input("Enter your projects name: ").lower()
 
-        match proj_name.lower():
+        match proj_name:
             case "?help":
                 get_help("name")
                 continue
@@ -71,6 +71,9 @@ def main():
                 break
 
     proj_dir.mkdir(exist_ok=True)
+
+    print(f"{proj_name = }")
+    print(" ".join(word.capitalize() for word in proj_name.split("_")))
 
 
 if __name__ == "__main__":
