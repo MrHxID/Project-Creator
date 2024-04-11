@@ -8,9 +8,11 @@ _help_dict = {
     "name": 'This will be the name of the main folder in your projects "src"-directory.\n'
     'Only alphanumeric characters and "_" are permitted. All other characters are escaped with "_".\n\n'
     'Example: Look at the structure of "Project Creator". There is a folder called "src" and inside\n'
-    'is a folder called "project_creator". This is what the name refers to.',
+    'is a folder called "project_creator". This is what the name refers to.\n'
+    'For a more detailed example refer to the section "[Naming Convention]" in README.md',
     # TODO implement help for directory
-    "directory": "",
+    "directory": ""
+    'For a more detailed example refer to the section "[Naming Convention]" in README.md',
 }
 
 
