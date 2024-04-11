@@ -2,7 +2,7 @@ This is a helper program that creates the file structure needed to make a
 python package installable.
 
 This will be the basic file structure:
-
+```
 [home dir]
           \
            - src
@@ -10,6 +10,7 @@ This will be the basic file structure:
            |     - [proj name]
            |                  \
            |                   - __init__.py
+```
 
 To use testing or to import it in other projects go to your shell
 and cd into your projects home directory. Then run the following command:
